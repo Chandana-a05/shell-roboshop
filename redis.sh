@@ -37,7 +37,7 @@ VALIDATE $? "Enabling Redis 7"
 dnf install redis -y  &>>$LOG_FILE
 VALIDATE $? "Installing Redis"
 
-sed -i -e's/127.0.0.1/0.0.0.0/g' /etc/redis/redis.conf -i 's/protected-mode yes/protected-mode no' /etc/redis/redis.conf
+sed -i 's/127.0.0.1/0.0.0.0/g' -i 's/protected-mode yes/protected-mode no' /etc/redis/redis.conf
 VALIDATE $? "Allowing remote connections"
 
 
@@ -49,3 +49,5 @@ VALIDATE $? "Starting Redis"
 END_TIME=$(date +%s)
 TOTAL_TIME=$(( $END_TIME - $START_TIME ))
 echo -e "Script executed in: $Y $TOTAL_TIME Seconds $N"
+
+
