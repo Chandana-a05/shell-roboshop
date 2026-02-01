@@ -45,6 +45,9 @@ VALIDATE $? "Downloading Cart code"
 cd /app 
 VALIDATE $? "Moving to app directory
 
+rm -rf /app/*
+VALIDATE $? "Removing existing code"
+
 unzip /tmp/cart.zip
 VALIDATE $? "Unzip Cart code"
 
