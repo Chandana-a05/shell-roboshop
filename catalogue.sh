@@ -5,7 +5,7 @@ LOGS_FOLDER="/var/log/shell-roboshop1"
 LOGS_FILE="$LOGS_FOLDER/$0.log"
 R="\e[31m"
 G="\e[32m"
-y="\e[33m"
+Y="\e[33m"
 B="\e[34m"
 N="\e[0m" #Normal
 
