@@ -33,6 +33,7 @@ do
         RECORD_NAME="$instance.$DOMAIN_NAME"
     fi
     echo "IP Adress : $IP"
+    
     aws route53 change-resource-record-sets \
     --hosted-zone-id $ZONE_ID \
     --change-batch '

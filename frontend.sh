@@ -14,7 +14,9 @@ if [ $USERID -ne 0 ]; then
     echo -e "$R please run this script with root user access $N" | tee -a $LOGS_FILE
     exit 1
 fi  
+
 mkdir -p $LOGS_FOLDER
+echo "Script start executed at : $(date)" | tee -a $LOGS_FILE
 
 VALIDATE(){
     if [ $1 -ne 0 ]; then
@@ -26,35 +28,24 @@ VALIDATE(){
 }
 
 dnf module disable nginx -y &>>$LOGS_FILE
-VALIDATE $? "Disabling Nginx Default version" 
-
 dnf module enable nginx:1.24 -y &>>$LOGS_FILE
-VALIDATE $? "Enable Nginx 1.24" 
-
 dnf install nginx -y &>>$LOGS_FILE
-VALIDATE $? "Install Nginx"
+VALIDATE $? "Installing Nginx"
 
-systemctl enable nginx 
+systemctl enable nginx &>>$LOGS_FILE
 systemctl start nginx
 VALIDATE $? "Starting nginx service"
 
 
 rm -rf /usr/share/nginx/html/* 
-VALIDATE $? "Remove the default content"
-
-
 curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip &>>$LOGS_FILE
-VALIDATE $? "Downloading frontend content"
-
 cd /usr/share/nginx/html 
-VALIDATE $? "moving to user directory"
-
 unzip /tmp/frontend.zip
-VALIDATE $? "unzip frontend content"
+VALIDATE $? "Downloading frontend"
 
 
 cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf
-VALIDATE $? "Nginx Reverse Proxy Configuration to reach backend services"
+VALIDATE $? "Copying nginx.conf"
 
 systemctl restart nginx 
 VALIDATE $? "Restarting nginx"
