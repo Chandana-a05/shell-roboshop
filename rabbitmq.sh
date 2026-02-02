@@ -9,7 +9,6 @@ Y="\e[33m"
 B="\e[34m"
 N="\e[0m" #Normal
 SCRIPT_DIR=$PWD
-MONGODB_HOST=mongodb.devopspro.online
 
 
 if [ $USERID -ne 0 ]; then
