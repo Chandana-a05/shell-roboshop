@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+USERID=$(id -u)
 LOGS_FOLDER="/var/log/shell-roboshop1"
 LOGS_FILE="$LOGS_FOLDER/$0.log"
 R="\e[31m"
@@ -22,10 +22,10 @@ echo "Script start executed at : $(date)" | tee -a $LOGS_FILE
 
 VALIDATE(){
     if [ $1 -ne 0 ]; then
-        echo "$2 ......FAILURE" | tee -a $LOGS_FILE
+        echo -e "$2 ......$R FAILURE $N" | tee -a $LOGS_FILE
         exit1
     else
-         echo "$2..... SUCCESS" | tee -a $LOGS_FILE
+         echo "$2..... $G SUCCESS $N" | tee -a $LOGS_FILE
     fi
 }
 
@@ -35,8 +35,8 @@ dnf install nodejs -y
 VALIDATE $? "Installing nodejs 20"
 
 id roboshop &>>LOGS_FILE
-if [ $? -ne 0]; then 
-    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+if [ $? -ne 0 ]; then 
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>LOGS_FILE
     VALIDATE $? "User added"
 else
     echo -e "user already exist....$Y SKIPPING $N"
@@ -54,7 +54,7 @@ VALIDATE $? "changing to app directory"
 rm -rf /app/*
 VALIDATE $? "Removing existing code"
 
-unzip /tmp/cart.zip
+unzip /tmp/cart.zip &>>$LOGS_FILE
 VALIDATE $? "Unzip Cart code"
 
 npm install &>>$LOGS_FILE
@@ -64,7 +64,7 @@ cp $SCRIPT_DIR/cart.service /etc/systemd/system/cart.service
 VALIDATE $? "Copy systemctl service"
 
 systemctl daemon-reload
-systemctl enable cart 
+systemctl enable cart &>>$LOGS_FILE
 systemctl restart cart
 VALIDATE $? "Restarted Cart"
 
