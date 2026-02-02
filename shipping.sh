@@ -78,7 +78,7 @@ if [ $? -ne 0 ]; then
     VALIDATE $? "Data loaded into Mysql"
 else
     echo -e "data is already loaded ... $Y SKIPPING $N"
-
-systemctl enable shipping 
+fi
+systemctl enable shipping &>>LOGS_FILE
 systemctl start shipping
 VALIDATE $? "Starting Shipping"
