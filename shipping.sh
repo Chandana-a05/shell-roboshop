@@ -9,7 +9,6 @@ Y="\e[33m"
 B="\e[34m"
 N="\e[0m" #Normal
 SCRIPT_DIR=$PWD
-MONGODB_HOST=mongodb.devopspro.online
 MYSQL_HOST=mysql.devopspro.online
 
 if [ $USERID -ne 0 ]; then
@@ -55,11 +54,19 @@ VALIDATE $? "Removing existing code"
 unzip /tmp/shipping.zip
 VALIDATE $? "Unzip User code"
 
-npm install &>>$LOGS_FILE
-VALIDATE $? "Installing dependencies"
+cd /app 
+mvn clean package &>>$LOGS_FILE
+VALIDATE $? "Installing and Building shipping"
+
+mv target/shipping-1.0.jar shipping.jar
+VALIDATE $? "Moving and Renaming shipping"
 
 cp $SCRIPT_DIR/shipping.service /etc/systemd/system/shipping.service
 VALIDATE $? "Copy systemctl service"
+
+npm install &>>$LOGS_FILE
+VALIDATE $? "Installing dependencies"
+
 
 dnf install mysql -y 
 VALIDATE $? "Installing Mysql"
